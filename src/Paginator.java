@@ -3,13 +3,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 public class Paginator {
 
     // criando o "Livro e suas paginas"
-    private List<List<String>> pages = new ArrayList<>();
+    private final List<List<String>> pages = new ArrayList<>();
+
+    public List<List<String>> getPages() {
+        return pages;
+    }
 
     public void pageMaker(String file, int regPerPag) {
         Path filePath = Path.of(file);
@@ -40,8 +43,8 @@ public class Paginator {
     }
 
     public void pageVisualizer() {
-        List<String> firstPage = pages.get(0);
-        List<String> lastPage = pages.get(pages.size() - 1);
+        List<String> firstPage = pages.getFirst();
+        List<String> lastPage = pages.getLast();
         int c = 0 ;
         
         System.out.println("---- First P ----");
