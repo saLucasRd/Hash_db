@@ -6,16 +6,17 @@ import java.util.Map;
 public class HashTable {
     
     private final Map<Integer, List<Entry>> buckets;
+    private final List<Entry> overflowArea;
     private final int bucketSize;
     private final int qBucket;
-    
-    public HashTable(int bucketSize, int qBucket) {
-       this.bucketSize = bucketSize; 
-       this.qBucket = qBucket; 
-       this.buckets = new HashMap<>(); 
+
+    public HashTable(int bucketSize, int qBucket, int totalRecords) {
+        this.bucketSize = bucketSize;
+        this.qBucket = qBucket;
+        this.buckets = new HashMap<>();
+        this.overflowArea = new ArrayList<>();
     } 
     
-    // big number goes brrrr
     private int hashFun(String key) {
         int hashPos = Math.abs(key.hashCode());
         return hashPos % qBucket; 
@@ -36,17 +37,43 @@ public class HashTable {
                 }
 
                 List<Entry> bucket = buckets.computeIfAbsent(bucketIndex, _ -> new ArrayList<>());
-
-                if (bucket.size() >= bucketSize) { 
-                    overflowCounter++;
-                }
-
                 Entry newEntry = new Entry(word, pageIndex);
-                bucket.add(newEntry);
+                
+                if (bucket.size() < bucketSize) { 
+                    bucket.add(newEntry);
+                } else {
+                    overflowCounter++;
+                    overflowArea.add(newEntry);
+                }
             }
         }
         System.out.println("qtd de colisoes " + collisionCounter);
         System.out.println("qtd de overflows " + overflowCounter);
+        System.out.println("Total de itens na area de overflow: " + overflowArea.size());
+    }
+    
+    public SearchResult searchWithIndex(String key) {
+        int bucketIndex = hashFun(key);
+        
+        if (buckets.containsKey(bucketIndex)) {
+            List<Entry> bucket = buckets.get(bucketIndex);
+            
+            for (Entry entry: bucket) {
+                if (entry.word().equals(key)) {
+                    
+                    return new SearchResult(entry, 1);
+                }
+            }
+        }
+        
+        // not found, search overflow
+        for (Entry entry : overflowArea) {
+            if (entry.word().equals(key)) {
+                return new SearchResult(entry, 2);
+            }
+        }
+        // not found anywere
+        return new SearchResult(null, 0);
     }
     
 }

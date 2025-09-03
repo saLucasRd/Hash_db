@@ -9,20 +9,26 @@ public class Paginator {
 
     // criando o "Livro e suas paginas"
     private final List<List<String>> pages = new ArrayList<>();
+    
+    private int recordCount = 0;
 
     public List<List<String>> getPages() {
         return pages;
     }
-
+    public int getRecordCount() {
+        return this.recordCount;
+    }
     public void pageMaker(String file, int regPerPag) {
         Path filePath = Path.of(file);
-
+        this.recordCount = 0;
+        
         // pagina atual temporaria
         List<String> currentPage = new ArrayList<>();
 
         try (Stream<String> lines = Files.lines(filePath)) {
 
             lines.forEach(line -> {
+                this.recordCount++;
                 currentPage.add(line);
 
 
