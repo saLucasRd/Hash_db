@@ -1,3 +1,5 @@
+package db.hash;
+
 public class SearchResult {
 
     private final Entry entry;

@@ -1,3 +1,5 @@
+package db.hash;
+
 import java.util.List;
 
 public class Searcher {
