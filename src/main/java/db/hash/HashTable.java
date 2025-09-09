@@ -2,15 +2,14 @@ package db.hash;
 
 // package db.hash; // Mantenha seu pacote
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import javafx.scene.control.TextArea;
 
 
 public class HashTable {
 
+    private Set<Integer> bucketsQueJaSofreramOverflow = new HashSet<>();
     private final Map<Integer, List<Entry>> buckets;
     private final List<Entry> overflowArea; 
     private final int bucketSize; 
@@ -31,24 +30,33 @@ public class HashTable {
     private int hashFun(String key) {
         return Math.abs(key.hashCode()) % qBucket;
     }
-
+    
+    
     public void buildIndex(List<List<String>> pages) {
+
+        this.collisionCounter = 0;
+        this.overflowCounter = 0;
+        this.bucketsQueJaSofreramOverflow.clear();
+        this.buckets.clear(); 
+        this.overflowArea.clear();
+        
         for (int pageIndex = 0; pageIndex < pages.size(); pageIndex++) {
             List<String> currentPage = pages.get(pageIndex);
             for (String word : currentPage) {
                 int bucketIndex = hashFun(word);
                 List<Entry> bucket = buckets.computeIfAbsent(bucketIndex, k -> new ArrayList<>());
-
-                if (!bucket.isEmpty()) {
-                    collisionCounter++;
-                }
-
                 Entry newEntry = new Entry(word, pageIndex);
 
                 if (bucket.size() < bucketSize) {
                     bucket.add(newEntry);
                 } else {
                     overflowCounter++;
+
+                    // LÓGICA DO PROFESSOR:
+                    if (bucketsQueJaSofreramOverflow.add(bucketIndex)) {
+                        collisionCounter++;
+                    }
+
                     overflowArea.add(newEntry);
                 }
             }
