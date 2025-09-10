@@ -1,6 +1,6 @@
 package db.hash;
 
-// package db.hash; // Mantenha seu pacote
+
 
 import java.util.*;
 
@@ -52,7 +52,6 @@ public class HashTable {
                 } else {
                     overflowCounter++;
 
-                    // LÓGICA DO PROFESSOR:
                     if (bucketsQueJaSofreramOverflow.add(bucketIndex)) {
                         collisionCounter++;
                     }

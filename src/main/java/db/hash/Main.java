@@ -47,7 +47,7 @@ public class Main extends Application {
             try {
                 resultsArea.clear();
                 int regPerPage = Integer.parseInt(pageSizeField.getText());
-                final int bucketSize = 15; // FR (Tamanho do bucket)
+                final int bucketSize = 5; // FR (Tamanho do bucket)
 
                 resultsArea.setText("Criando páginas a partir de 'words.txt'...\n");
 
@@ -59,7 +59,6 @@ public class Main extends Application {
 
                 displayFirstAndLastPages(resultsArea);
 
-                // Cálculo otimizado de buckets
                 final int qtBuckets = (int) ((totalWords / (double) bucketSize) / 0.75);
                 resultsArea.appendText("\nConstruindo índice com " + qtBuckets + " buckets...\n");
 
@@ -69,7 +68,6 @@ public class Main extends Application {
                 resultsArea.appendText("Índice construído com sucesso!\n\n");
                 hashT.appendStatistics(resultsArea);
 
-                // Habilita o campo de busca
                 searchField.setDisable(false);
 
             } catch (NumberFormatException e) {
@@ -97,11 +95,11 @@ public class Main extends Application {
             StringBuilder resultsBuilder = new StringBuilder();
             resultsBuilder.append("--- BUSCA COM ÍNDICE ---\n");
             if (indexResult.isFound()) {
-                resultsBuilder.append("Palavra '").append(keyToSearch).append("' encontrada na página: ").append(indexResult.getEntry().pageNumber()).append("\n");
+                resultsBuilder.append("Palavra '").append(keyToSearch).append("' encontrada na página: ").append(indexResult.entry().pageNumber()).append("\n");
             } else {
                 resultsBuilder.append("Palavra '").append(keyToSearch).append("' não encontrada.\n");
             }
-            resultsBuilder.append("Custo (acessos a disco): ").append(indexResult.getCost()).append("\n");
+            resultsBuilder.append("Custo (acessos a disco): ").append(indexResult.cost()).append("\n");
             resultsBuilder.append("Tempo: ").append(indexTime).append(" nanossegundos.\n");
 
             resultsArea.setText(resultsBuilder.toString());
@@ -118,11 +116,11 @@ public class Main extends Application {
             StringBuilder resultsBuilder = new StringBuilder();
             resultsBuilder.append("--- BUSCA COM TABLE SCAN ---\n");
             if (scanResult.isFound()) {
-                resultsBuilder.append("Palavra '").append(keyToSearch).append("' encontrada na página: ").append(scanResult.getEntry().pageNumber()).append("\n");
+                resultsBuilder.append("Palavra '").append(keyToSearch).append("' encontrada na página: ").append(scanResult.entry().pageNumber()).append("\n");
             } else {
                 resultsBuilder.append("Palavra '").append(keyToSearch).append("' não encontrada.\n");
             }
-            resultsBuilder.append("Custo (páginas lidas): ").append(scanResult.getCost()).append("\n");
+            resultsBuilder.append("Custo (páginas lidas): ").append(scanResult.cost()).append("\n");
             resultsBuilder.append("Tempo: ").append(scanTime).append(" nanossegundos.\n");
 
             resultsArea.setText(resultsBuilder.toString());
